@@ -6,6 +6,7 @@ class PageCommentEmailNotification extends DataObjectDecorator {
 
 	       $email = new Email(); 
 			$email->setTemplate('NewComment'); 
+			$email->setFrom(Email::getAdminEmail()); 
 			$email->setTo(Email::getAdminEmail()); 
 			// $email->addCustomHeader('Reply-To', Member::currentUser()->Email); 
 			$email->setSubject('New Comment ' . str_replace(array("http://", "https://"), array("", ""), Director::absoluteBaseURL())); 
