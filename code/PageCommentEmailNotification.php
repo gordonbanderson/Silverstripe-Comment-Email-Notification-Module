@@ -1,21 +1,20 @@
 <?php
 
-class PageCommentEmailNotification extends DataObjectDecorator { 
-	function onAfterWrite() { 
-		parent::onAfterWrite();
+class PageCommentEmailNotification extends DataExtension {
+	function onAfterPostComment($comment) {
+		$email = new Email();
+		$email->setTemplate('NewComment');
+		$email->setFrom(Email::getAdminEmail());
+		$email->setTo(Email::getAdminEmail());
+		$email->addCustomHeader('Reply-To', $comment->Email);
+		$email->setSubject('New Comment ' . str_replace(array("http://", "https://"), array("", ""), Director::absoluteBaseURL()));
 
-	       $email = new Email(); 
-			$email->setTemplate('NewComment'); 
-			$email->setFrom(Email::getAdminEmail()); 
-			$email->setTo(Email::getAdminEmail()); 
-			// $email->addCustomHeader('Reply-To', Member::currentUser()->Email); 
-			$email->setSubject('New Comment ' . str_replace(array("http://", "https://"), array("", ""), Director::absoluteBaseURL())); 
-			$email->populateTemplate(array( 
-				'URL' => Director::absoluteBaseURL() . $this->owner->Parent()->URLSegment, 
-				'PageTitle' => $this->owner->Parent()->Title, 
-				'Comment' => $this->owner->Comment, 
-				'Name' => $this->owner->Name, 
-			)); 
-			$email->send(); 
-		} 
+		$email->populateTemplate(array(
+				'URL' => Director::absoluteBaseURL() . $comment->Link(),
+				'PageTitle' => $comment->getParent()->Title,
+				'Comment' => $comment->Comment,
+				'Name' => $comment->Name
+			));
+		$email->send();
+	}
 }
