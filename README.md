@@ -1,5 +1,8 @@
-Email Notification of Comments
-==============================
+#Email Notification of Comments
+
+Please note that I will no longer be mainting this module, https://github.com/tractorcow/silverstripe-comments-notifications offers more configurability.
+
+#Install
 
 To install this module execute the following in your web root:
 
